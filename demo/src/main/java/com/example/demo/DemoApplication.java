@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 
 import com.example.demo.dao.CategoryRepository;
 import com.example.demo.dao.ProductRepository;
@@ -15,19 +17,22 @@ import com.example.demo.entities.Product;
 import net.bytebuddy.utility.RandomString;
 
 @SpringBootApplication
+@ComponentScan({"com.example.demo.web"})
 public class DemoApplication implements CommandLineRunner{
 	
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+	@Autowired
+	private RepositoryRestConfiguration repositoryRestConfiguration;
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
+		repositoryRestConfiguration.exposeIdsFor(Product.class, Category.class);
 		// TODO Auto-generated method stub
 		categoryRepository.save(new Category(null,"Computer",null,null,null));
 		categoryRepository.save(new Category(null,"printers",null,null,null));
@@ -44,7 +49,7 @@ public class DemoApplication implements CommandLineRunner{
 				p.setPromotion(rnd.nextBoolean());
 				p.setSelected(rnd.nextBoolean());
 				p.setCategory(c);
-				p.setPhotoName("unknow.JPEG");
+				p.setPhotoName("1.JPG");
 				productRepository.save(p);
 			}
 
